@@ -10,9 +10,10 @@ def call(Map configMap){
         }
         environment{
             def appVersion = '' // global variable which can be accessed anywhere within the file
-            nexusUrl = 'nexus.guru97s.cloud:8081'
-            region = 'us-east-1'
-            account_id = '637423540068'
+            nexusUrl = pipelineGlobals.nexusURL()
+            region = pipelineGlobals.region()
+            account_id = pipelineGlobals.account_id()
+            component = configMap.get("component")
         }
         stages {
             stage('Read The Version'){
