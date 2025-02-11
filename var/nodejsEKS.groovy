@@ -67,25 +67,6 @@ def call(Map configMap){
 
                 }
             }
-            // stage('Sonar Scan') {
-            //     environment {
-            //         scannerHome = tool 'sonar-6.0' // refering scanner CLI
-            //     }
-            //     steps {
-            //         script {
-            //             withSonarQubeEnv('sonar-6.0') { // refering sonar server 
-            //                 sh "${scannerHome}/bin/sonar-scanner"
-            //             }
-            //         }
-            //     }
-            // }
-            // stage("Quality Gate") {
-            //     steps {
-            //       timeout(time: 30, unit: 'MINUTES') {
-            //         waitForQualityGate abortPipeline: true
-            //       }
-            //     }
-            //   }
             // stage('Nexus Artifact Uploader'){ // uploading the backend zip to the nexus repository(backend)
             //     steps {
             //         script {
@@ -107,23 +88,6 @@ def call(Map configMap){
 
             //         }
             //     }
-            // }
-        //     stage('Deploy'){ //transfering build job backend to backend-deploy and passing appVersion as input to the backend-deploy(pipeline)
-        //         when {
-        //             expression {
-        //                 params.deploy
-        //             }
-        //         }
-        //         steps {
-        //             script {
-        //                 def params = [
-        //                 string(name: 'appVersion', value: "${appVersion}")
-        //             ]
-        //                 build job: 'backend-deploy', parameters: params, wait: false  // when we include wait:false upstream job won't wait for downstream job
-                        
-        //             }
-        //         }
-        //     }
         }
             post { 
             always { 
