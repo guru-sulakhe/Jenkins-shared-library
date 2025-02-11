@@ -14,6 +14,7 @@ def call(Map configMap){
             region = pipelineGlobals.region()
             account_id = pipelineGlobals.account_id()
             component = configMap.get("component")
+            project = configMap.get("project")
         }
         stages {
             stage('Read The Version'){
@@ -47,9 +48,9 @@ def call(Map configMap){
                     sh """
                         aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${account_id}.dkr.ecr.${region}.amazonaws.com
 
-                        docker build -t ${account_id}.dkr.ecr.${region}.amazonaws.com/expense-${component}:${appVersion} .
+                        docker build -t ${account_id}.dkr.ecr.${region}.amazonaws.com/${project}-${component}:${appVersion} .
 
-                        docker push ${account_id}.dkr.ecr.${region}.amazonaws.com/expense-${component}:${appVersion}
+                        docker push ${account_id}.dkr.ecr.${region}.amazonaws.com/${project}-${component}:${appVersion}
 
                     """
 
@@ -58,7 +59,7 @@ def call(Map configMap){
             stage('Deploy'){ //deploying the application by implementing helm kubernetes
                 steps { //after the first installment of helm, mention helm upgrade backend . in the pipeline 
                     sh """
-                        aws eks update-kubeconfig --region us-east-1 --name expense-dev
+                        aws eks update-kubeconfig --region ${region} --name ${project}-dev
                         cd helm
                         sed -i 's/IMAGE_VERSION/${appVersion}/g' values.yaml 
                         helm install backend .
