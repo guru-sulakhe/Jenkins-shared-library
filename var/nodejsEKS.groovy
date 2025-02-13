@@ -102,10 +102,10 @@ def call(Map configMap){
                                 """
                                 rollbackStatus = sh(script: "kubectl rollout status deployment/backend -n ${project} --timeout=1m || true", returnStdout:true).trim()
                                 if(rollbackStatus.contains('successfully rolled out')){
-                                    echo "Rollback is successsful"
+                                    error "Deployment is failed, Rollback is successsful"
                                 }
                                 else{
-                                    error "Rollback is failed"
+                                    error "Deployment is failed, Rollback is failed"
                                 }
                             }
                         }
