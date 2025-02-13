@@ -70,6 +70,15 @@ def call(Map configMap){
                                 helm install ${component} -n ${project} .
                             """
                         }
+                        else{
+                           echo "${component} is installed yet, first time installation"
+                           sh """
+                                aws eks update-kubeconfig --region ${region} --name ${project}-dev
+                                cd helm
+                                sed -i 's/IMAGE_VERSION/${appVersion}/g' values.yaml 
+                                helm upgrade ${component} -n ${project} .
+                            """ 
+                        }
                     } 
                 }
             }
