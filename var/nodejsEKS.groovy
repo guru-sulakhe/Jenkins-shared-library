@@ -91,6 +91,12 @@ def call(Map configMap){
                         }
                         else {
                             echo "Deployment is failed, performing rollback"
+                            if(releaseExists.isEmpty()){
+                            
+                            sh """
+                                
+                            """
+                        }
                         }
                     }
                 }
