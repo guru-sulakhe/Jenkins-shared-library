@@ -94,7 +94,7 @@ def call(Map configMap){
                             if(releaseExists.isEmpty()){ //if true then rollback will not be done, because it is first deploymnt
                                 error "Deployment failed, not able to rollback, since it is first time deployment"
                             }
-                            else{ //this will rollback to the one back previous version
+                            else{ //this will rollback to one version back
                                 sh """
                                     aws eks update-kubeconfig --region ${region} --name ${project}-dev
                                     helm rollback backend -n ${project} 0
