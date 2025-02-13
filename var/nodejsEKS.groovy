@@ -82,6 +82,19 @@ def call(Map configMap){
                     } 
                 }
             }
+            stage('Verify Deploymnet'){
+                steps{
+                    script{
+                        rollbackStatus = sh(script: "kubectl rollout status deployment/backend -n ${project} --timeout=1m || true", returnStdout:true).trim()
+                        if(rollbackStatus.contains('successfully rolled out')){
+                            echo "Deployment is successsful"
+                        }
+                        else {
+                            echo "Deployment is failed, performing rollback"
+                        }
+                    }
+                }
+            }
             // stage('Nexus Artifact Uploader'){ // uploading the backend zip to the nexus repository(backend)
             //     steps {
             //         script {
