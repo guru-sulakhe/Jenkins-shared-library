@@ -60,7 +60,7 @@ def call(Map configMap){
             stage('Deploy'){ //deploying the application by implementing helm kubernetes
                 steps { //after the first installment of helm, mention helm upgrade backend . in the pipeline
                     script{
-                        releaseExists = sh(script: "helm list -A --short | grep -w ${component} || true", returnStdout:true).trim()
+                        releaseExists = sh(script: "helm list -A --short | grep -w ${component} || true", returnStdout:true).trim() //this will verify whether deployment is successful in host-server
                         if(releaseExists.isEmpty()){
                             echo "${component} is not installed yet, first time installation"
                             sh """
@@ -91,7 +91,7 @@ def call(Map configMap){
                         }
                         else {
                             echo "Deployment is failed, performing rollback"
-                            if(releaseExists.isEmpty()){
+                            if(releaseExists.isEmpty()){ //if true then rollback will not be done, because it is first deploymnt
                                 error "Deployment failed, not able to rollback, since it is first time deployment"
                             }
                             else{ //this will rollback to the one back previous version
