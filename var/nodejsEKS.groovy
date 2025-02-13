@@ -92,11 +92,22 @@ def call(Map configMap){
                         else {
                             echo "Deployment is failed, performing rollback"
                             if(releaseExists.isEmpty()){
-                            
-                            sh """
-                                
-                            """
-                        }
+                                error "Deployment failed, not able to rollback, since it is first time deployment"
+                            }
+                            else{ //this will rollback to the one back previous version
+                                sh """
+                                    aws eks update-kubeconfig --region ${region} --name ${project}-dev
+                                    helm rollback backend -n ${project} 0
+                                    sleep(60)
+                                """
+                                rollbackStatus = sh(script: "kubectl rollout status deployment/backend -n ${project} --timeout=1m || true", returnStdout:true).trim()
+                                if(rollbackStatus.contains('successfully rolled out')){
+                                    echo "Rollback is successsful"
+                                }
+                                else{
+                                    error "Rollback is failed"
+                                }
+                            }
                         }
                     }
                 }
