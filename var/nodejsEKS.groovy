@@ -21,7 +21,7 @@ def call(Map configMap){
             stage('Read The Version'){
                 steps {
                     script{
-                        sh "environment: ${env}"
+                        sh "environment: ${env}" //checking env properties of the pipeline
                         def packageJson = readJSON file: 'package.json'
                         appVersion = packageJson.version
                         echo "application version: $appVersion"
@@ -29,9 +29,9 @@ def call(Map configMap){
                 }
             }
             stage('Installing Dependencies') {
-                steps {
+                steps { //installing nodejs dependencies and printing appVersion
                     sh """
-                        npm install
+                        npm install 
                         ls -ltr
                         echo "application version: $appVersion"
                     """
@@ -83,7 +83,7 @@ def call(Map configMap){
                     } 
                 }
             }
-            stage('Verify Deploymnet'){
+            stage('Verify Deploymnet'){ //if deployment is present it is successful, if not it will rollback to previous version of the pipeline
                 steps{
                     script{
                         rollbackStatus = sh(script: "kubectl rollout status deployment/backend -n ${project} --timeout=1m || true", returnStdout:true).trim()
