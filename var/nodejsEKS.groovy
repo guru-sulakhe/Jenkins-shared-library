@@ -58,14 +58,19 @@ def call(Map configMap){
                 }
             }
             stage('Deploy'){ //deploying the application by implementing helm kubernetes
-                steps { //after the first installment of helm, mention helm upgrade backend . in the pipeline 
-                    sh """
-                        aws eks update-kubeconfig --region ${region} --name ${project}-dev
-                        cd helm
-                        sed -i 's/IMAGE_VERSION/${appVersion}/g' values.yaml 
-                        helm install ${component} -n ${project} .
-                    """
-
+                steps { //after the first installment of helm, mention helm upgrade backend . in the pipeline
+                    script{
+                        releaseExists = sh(script: "helm list -A --short | grep -w ${component} || true", returnStdout:true).trim()
+                        if(releaseExists.isEmpty()){
+                            echo "${component} is not installed yet, first time installation"
+                            sh """
+                                aws eks update-kubeconfig --region ${region} --name ${project}-dev
+                                cd helm
+                                sed -i 's/IMAGE_VERSION/${appVersion}/g' values.yaml 
+                                helm install ${component} -n ${project} .
+                            """
+                        }
+                    } 
                 }
             }
             // stage('Nexus Artifact Uploader'){ // uploading the backend zip to the nexus repository(backend)
