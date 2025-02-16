@@ -16,6 +16,9 @@ pipeline {
         project = configMap.get("project")
         releaseExists = ''
     }
+    parameters{
+        //which component you want to deploy
+    }
     stages {
         stage('Deploy'){
             steps {
@@ -24,8 +27,11 @@ pipeline {
                 } 
             }
         }
-        stage('Integration Testing') {
-            steps { //installing nodejs dependencies and printing appVersion
+        stage('Integration tests') {
+            steps { 
+                script{
+                    //Run integration tests
+                }
                 
             }
         }
