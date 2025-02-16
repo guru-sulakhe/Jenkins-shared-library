@@ -21,7 +21,7 @@ def call(Map configMap){
             stage('Read The Version'){
                 steps {
                     script{
-                        sh "environment: ${env}" //checking env properties of the pipeline
+                        echo sh(returnStdout: true, script: 'env') //checking env properties of the pipeline, which will be created by jenkins automatically
                         def packageJson = readJSON file: 'package.json'
                         appVersion = packageJson.version
                         echo "application version: $appVersion"
