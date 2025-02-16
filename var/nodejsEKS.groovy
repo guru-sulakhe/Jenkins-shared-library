@@ -60,7 +60,7 @@ def call(Map configMap){
             }
             stage('Deploy'){ //deploying the application by implementing helm kubernetes
                 steps { //after the first installment of helm, mention helm upgrade backend . in the pipeline
-                    script{
+                    script{ // if we are using groovy script then we must include within the scrip{}
                         releaseExists = sh(script: "helm list -A --short | grep -w ${component} || true", returnStdout:true).trim() //this will verify whether deployment is successful in host-server
                         if(releaseExists.isEmpty()){
                             echo "${component} is not installed yet, first time installation"
@@ -86,19 +86,19 @@ def call(Map configMap){
             stage('Verify Deploymnet'){ //if deployment is present it is successful, if not it will rollback to previous version of the pipeline
                 steps{
                     script{
-                        rollbackStatus = sh(script: "kubectl rollout status deployment/backend -n ${project} --timeout=1m || true", returnStdout:true).trim()
+                        rollbackStatus = sh(script: "kubectl rollout status deployment/backend -n ${project} --timeout=1m || true", returnStdout:true).trim() //this will check the deployment rollout status whether the deployment is success or not
                         if(rollbackStatus.contains('successfully rolled out')){
                             echo "Deployment is successsful"
                         }
                         else {
                             echo "Deployment is failed, performing rollback"
-                            if(releaseExists.isEmpty()){ //if true then rollback will not be done, because it is first deploymnt
+                            if(releaseExists.isEmpty()){ //if true then rollback will not be done, because it is first deployment
                                 error "Deployment failed, not able to rollback, since it is first time deployment"
                             }
-                            else{ //this will rollback to one version back
+                            else{ //this will rollback previous  one version back i.e rollback to previous version
                                 sh """
                                     aws eks update-kubeconfig --region ${region} --name ${project}-dev
-                                    helm rollback backend -n ${project} 0
+                                    helm rollback backend -n ${project} 0 
                                     sleep 60
                                 """
                                 rollbackStatus = sh(script: "kubectl rollout status deployment/backend -n ${project} --timeout=1m || true", returnStdout:true).trim()
