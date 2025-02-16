@@ -14,7 +14,7 @@ pipeline {
         account_id = pipelineGlobals.account_id()
         component = configMap.get("component")
         project = configMap.get("project")
-        releaseExists = ''
+        def releaseExists = ""
     }
     parameters{
         //which component you want to deploy
