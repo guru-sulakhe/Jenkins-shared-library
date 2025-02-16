@@ -18,6 +18,7 @@ pipeline {
     }
     parameters{
         //which component you want to deploy
+        //which environment
     }
     stages {
         stage('Deploy'){
