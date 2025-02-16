@@ -24,13 +24,9 @@ pipeline {
                 } 
             }
         }
-        stage('Installing Dependencies') {
+        stage('Integration Testing') {
             steps { //installing nodejs dependencies and printing appVersion
-                sh """
-                    npm install 
-                    ls -ltr
-                    echo "application version: $appVersion"
-                """
+                
             }
         }
 
@@ -45,5 +41,6 @@ pipeline {
         failure { 
             echo 'I will run only when pipeline is failure'
         }
+    }
     }
 }
