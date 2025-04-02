@@ -14,7 +14,7 @@ def call(Map configMap){
         environment {
             appVersion = '' // this will become global, we can use across pipeline
             region = 'us-east-1'
-            account_id = '315069654700'
+            account_id = '637423540068'
             project = configMap.get("project")
             environment = 'dev'
             component = configMap.get("component")
