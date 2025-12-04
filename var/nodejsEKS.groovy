@@ -10,9 +10,9 @@ def call(Map configMap){
         }
         environment{
             def appVersion = '' // global variable which can be accessed anywhere within the file
-            nexusUrl = pipelineGlobals.nexusURL()
-            region = pipelineGlobals.region()
-            account_id = pipelineGlobals.account_id()
+            nexusUrl = pipelineGlobals.nexusURL() //filename.variableName()
+            region = pipelineGlobals.region() //fileName.variableName()
+            account_id = pipelineGlobals.account_id() //fileName.variableName()
             component = configMap.get("component")
             project = configMap.get("project")
             def releaseExists = ""
